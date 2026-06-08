@@ -71,14 +71,68 @@ window.PokiSDK = {
     setDebugTouchOverlayController: function() {}
 };
 
-// Charger Unity directement
-var unityScript = document.createElement("script");
-unityScript.src = root + loader;
-unityScript.onload = function () {
-    // window.onload a déjà tiré car unity.js est chargé dynamiquement après le chargement de la page.
-    // On le déclenche manuellement pour que Unity s'initialise correctement.
-    if (typeof window.onload === "function") {
-        window.onload();
+function unityCanReceiveMessages() {
+    return !!(
+        window.unityGame &&
+        typeof window.unityGame.SendMessage === "function" &&
+        window.unityGame.Module &&
+        window.unityGame.Module.asm &&
+        typeof window.unityGame.Module.asm.stackSave === "function"
+    );
+}
+
+function sendUnityMessageWhenReady(target, method, value) {
+    function attempt() {
+        try {
+            if (unityCanReceiveMessages()) {
+                if (value === undefined) {
+                    window.unityGame.SendMessage(target, method);
+                } else {
+                    window.unityGame.SendMessage(target, method, value);
+                }
+                return;
+            }
+        } catch (_) {
+        }
+        setTimeout(attempt, 100);
     }
-};
-document.body.appendChild(unityScript);
+    attempt();
+}
+
+function installPokiBridgePatch() {
+    window.initPokiBridge = function(name) {
+        window.pokiBridge = name;
+        window.commercialBreak = function() {
+            return Promise.resolve(window.PokiSDK.commercialBreak()).then(function() {
+                sendUnityMessageWhenReady(name, "commercialBreakCompleted");
+            });
+        };
+        window.rewardedBreak = function() {
+            return Promise.resolve(window.PokiSDK.rewardedBreak()).then(function(success) {
+                sendUnityMessageWhenReady(name, "rewardedBreakCompleted", String(success));
+            });
+        };
+        sendUnityMessageWhenReady(name, window.pokiAdBlock ? "adblock" : "ready");
+    };
+}
+
+function loadUnityScript() {
+    var unityScript = document.createElement("script");
+    unityScript.src = root + loader;
+    unityScript.onload = function () {
+        installPokiBridgePatch();
+        if (typeof window.onload === "function") {
+            window.onload();
+        }
+    };
+    document.body.appendChild(unityScript);
+}
+
+if (window.HAVANA_SAVE_READY && typeof window.HAVANA_SAVE_READY.then === "function") {
+    window.HAVANA_SAVE_READY.then(loadUnityScript).catch(function (error) {
+        console.error("Save startup failed:", error);
+        loadUnityScript();
+    });
+} else {
+    loadUnityScript();
+}

@@ -2,7 +2,7 @@
   "use strict";
 
   var scope = window.HAVANA_SAVE_SCOPE || "havanamaps";
-  var fixVersion = "startup-fix-v2";
+  var fixVersion = "startup-fix-v10";
   var resetKey = scope + ":" + fixVersion;
   var installKeys = ["save_injection_count", "save_version", "save_toast_shown"];
 
@@ -11,13 +11,24 @@
       localStorage.removeItem(key);
       localStorage.removeItem(scope + ":" + key);
     });
+    localStorage.removeItem(scope + ":save_preinstall_v9");
+    localStorage.removeItem(scope + ":save_preinstall_v10");
+    localStorage.removeItem(scope + ":save_preinstall_v11");
+    localStorage.removeItem(scope + ":save_preinstall_v12");
+    localStorage.removeItem(scope + ":save_preinstall_v13");
+    localStorage.removeItem(scope + ":save_preinstall_v14");
     localStorage.setItem(resetKey, "1");
   }
 
   var values = {
-    ageRestrictionInputVersion: "1",
-    ageRestrictionInputMonth: "12",
-    ageRestrictionInputYear: "1999",
+    ageRestrictionInputVersion: "9999",
+    ageRestrictionInputMonth: "1",
+    ageRestrictionInputYear: "2015",
+    AgeRestrictionInputVersion: "9999",
+    AgeRestrictionInputMonth: "1",
+    AgeRestrictionInputYear: "2015",
+    behavioralAdsAllowed: "0",
+    BehavioralAdsAllowed: "0",
     isFreshInstall: "0",
     hasUserRunAppBefore: "1",
     isTutorialCompleted: "1",
@@ -30,8 +41,15 @@
     shouldShowCollectPopup: "0",
     shouldShowFacebookPopup: "0",
     shouldShowHoverboardPopup: "0",
+    shouldShowMissionIntroPopup: "0",
     shouldShowMissionIntroductionPopup: "0",
-    shouldShowEndGameMissionPopup: "0"
+    shouldShowEndGameMissionPopup: "0",
+    tutorialCompleted: "1",
+    TutorialCompleted: "1",
+    HasShownMission1Popup: "1",
+    HasShownMission2Popup: "1",
+    ShouldShowMission1Popup: "0",
+    ShouldShowMission2Popup: "0"
   };
 
   var prefixes = [
