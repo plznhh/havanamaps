@@ -4,17 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HavanaMaps - Map Selector</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
   <main class="selector-shell">
     <section class="selector-card" aria-labelledby="site-title">
       <div class="site-tabs" aria-label="Mapas">
-        <button class="site-tab is-active" type="button">Havana</button>
+        <button class="site-tab is-active" id="maps-tab" type="button">Havana</button>
+        <button class="site-tab" id="settings-tab" type="button">Config</button>
         <button class="site-tab" type="button" disabled>Mais mapas</button>
       </div>
 
-      <div class="preview-card">
+      <div class="preview-card" id="maps-panel">
         <div class="map-preview" aria-hidden="true">
           <span class="open-badge">SAVE ON</span>
           <span class="preview-title">HAVANA</span>
@@ -71,6 +72,48 @@
           </a>
         </div>
       </div>
+
+      <section class="settings-card" id="settings-panel" hidden>
+        <div class="settings-header">
+          <div>
+            <p class="kicker">Settings</p>
+            <h2>Configurações</h2>
+          </div>
+          <button class="settings-close" id="settings-close" type="button">Voltar</button>
+        </div>
+
+        <div class="custom-resolution-box">
+          <label class="toggle-row">
+            <span>Custom Resolution</span>
+            <input id="custom-resolution-toggle" type="checkbox">
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+
+          <div class="resolution-fields">
+            <label>
+              <span>Width</span>
+              <input id="resolution-width" type="number" inputmode="numeric" min="1" max="9999" value="608">
+            </label>
+            <label>
+              <span>Height</span>
+              <input id="resolution-height" type="number" inputmode="numeric" min="1" max="9999" value="1080">
+            </label>
+          </div>
+
+          <button class="reset-resolution" id="reset-resolution" type="button">RESET</button>
+          <p class="fullscreen-note">Press F11 for full-screen.</p>
+
+          <div class="resolution-presets" aria-label="Resoluções prontas">
+            <button type="button" data-width="608" data-height="1080">608x1080</button>
+            <button type="button" data-width="800" data-height="600">800x600</button>
+            <button type="button" data-width="800" data-height="1080">800x1080</button>
+            <button type="button" data-width="720" data-height="1280">720x1280</button>
+            <button type="button" data-width="768" data-height="1024">768x1024</button>
+            <button type="button" data-width="820" data-height="1180">820x1180</button>
+            <button type="button" data-width="1024" data-height="1366">1024x1366</button>
+          </div>
+        </div>
+      </section>
     </section>
   </main>
 
@@ -80,6 +123,32 @@
       var play = document.getElementById("play-button");
       var summary = document.getElementById("selected-summary");
       var options = Array.prototype.slice.call(document.querySelectorAll(".map-option"));
+      var mapsTab = document.getElementById("maps-tab");
+      var settingsTab = document.getElementById("settings-tab");
+      var mapsPanel = document.getElementById("maps-panel");
+      var settingsPanel = document.getElementById("settings-panel");
+      var settingsClose = document.getElementById("settings-close");
+      var resolutionToggle = document.getElementById("custom-resolution-toggle");
+      var resolutionWidth = document.getElementById("resolution-width");
+      var resolutionHeight = document.getElementById("resolution-height");
+      var resetResolution = document.getElementById("reset-resolution");
+      var presetButtons = Array.prototype.slice.call(document.querySelectorAll(".resolution-presets button"));
+      var resolutionKeys = {
+        enabled: "havanamaps_custom_resolution_enabled",
+        width: "havanamaps_custom_resolution_width",
+        height: "havanamaps_custom_resolution_height"
+      };
+
+      function setPanel(panel) {
+        var settingsOpen = panel === "settings";
+        mapsPanel.hidden = settingsOpen;
+        settingsPanel.hidden = !settingsOpen;
+        mapsTab.classList.toggle("is-active", !settingsOpen);
+        settingsTab.classList.toggle("is-active", settingsOpen);
+        if (settingsOpen) {
+          setOpen(false);
+        }
+      }
 
       function setOpen(isOpen) {
         form.hidden = !isOpen;
@@ -99,6 +168,43 @@
         if (closePicker) {
           setOpen(false);
         }
+      }
+
+      function clampResolution(value, fallback) {
+        value = parseInt(value, 10);
+        if (!Number.isFinite(value) || value < 1) {
+          return fallback;
+        }
+        return Math.min(value, 9999);
+      }
+
+      function updatePresetState() {
+        var width = clampResolution(resolutionWidth.value, 608);
+        var height = clampResolution(resolutionHeight.value, 1080);
+        presetButtons.forEach(function (button) {
+          button.classList.toggle(
+            "is-selected",
+            button.dataset.width === String(width) && button.dataset.height === String(height)
+          );
+        });
+      }
+
+      function saveResolution() {
+        var width = clampResolution(resolutionWidth.value, 608);
+        var height = clampResolution(resolutionHeight.value, 1080);
+        resolutionWidth.value = width;
+        resolutionHeight.value = height;
+        localStorage.setItem(resolutionKeys.enabled, resolutionToggle.checked ? "1" : "0");
+        localStorage.setItem(resolutionKeys.width, String(width));
+        localStorage.setItem(resolutionKeys.height, String(height));
+        updatePresetState();
+      }
+
+      function loadResolution() {
+        resolutionToggle.checked = localStorage.getItem(resolutionKeys.enabled) === "1";
+        resolutionWidth.value = clampResolution(localStorage.getItem(resolutionKeys.width), 608);
+        resolutionHeight.value = clampResolution(localStorage.getItem(resolutionKeys.height), 1080);
+        updatePresetState();
       }
 
       summary.addEventListener("click", function () {
@@ -121,6 +227,39 @@
         }
       });
 
+      mapsTab.addEventListener("click", function () {
+        setPanel("maps");
+      });
+
+      settingsTab.addEventListener("click", function () {
+        setPanel("settings");
+      });
+
+      settingsClose.addEventListener("click", function () {
+        setPanel("maps");
+      });
+
+      resolutionToggle.addEventListener("change", saveResolution);
+      resolutionWidth.addEventListener("change", saveResolution);
+      resolutionHeight.addEventListener("change", saveResolution);
+
+      presetButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+          resolutionWidth.value = button.dataset.width;
+          resolutionHeight.value = button.dataset.height;
+          resolutionToggle.checked = true;
+          saveResolution();
+        });
+      });
+
+      resetResolution.addEventListener("click", function () {
+        resolutionToggle.checked = false;
+        resolutionWidth.value = 608;
+        resolutionHeight.value = 1080;
+        saveResolution();
+      });
+
+      loadResolution();
       sync(false);
     })();
   </script>

@@ -22,6 +22,29 @@ var root = scriptUrl.split("master-loader.js")[0],
 if (0 <= window.location.href.indexOf("pokiForceLocalLoader") && (loaders.unity = "/unity/dist/unity.js", loaders["unity-beta"] = "/unity-beta/dist/unity-beta.js", loaders["unity-2020"] = "/unity-2020/dist/unity-2020.js", root = "/loaders"));
 if (!window.config) throw Error("window.config not found");
 
+function applyCustomResolutionConfig() {
+    try {
+        if (localStorage.getItem("havanamaps_custom_resolution_enabled") !== "1") {
+            return;
+        }
+        var width = parseInt(localStorage.getItem("havanamaps_custom_resolution_width"), 10);
+        var height = parseInt(localStorage.getItem("havanamaps_custom_resolution_height"), 10);
+        if (!Number.isFinite(width) || !Number.isFinite(height) || width < 1 || height < 1) {
+            return;
+        }
+        var ratio = width / height;
+        window.config.maxRatio = ratio;
+        window.config.minRatio = ratio;
+        window.config.customResolution = {
+            width: width,
+            height: height
+        };
+    } catch (_) {
+    }
+}
+
+applyCustomResolutionConfig();
+
 var loader = loaders[window.config.loader];
 if (!loader) throw Error('Loader "' + window.config.loader + '" not found');
 
