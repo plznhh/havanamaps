@@ -2,7 +2,7 @@
   "use strict";
 
   var scope = window.HAVANA_SAVE_SCOPE || "havanamaps";
-  var fixVersion = "startup-save-only-v11";
+  var fixVersion = "startup-save-only-v12";
   var resetKey = scope + ":" + fixVersion;
 
   if (localStorage.getItem(resetKey) === "1") return;
@@ -23,7 +23,8 @@
     "save_preinstall_v12",
     "save_preinstall_v13",
     "save_preinstall_v14",
-    "save_preinstall_v15"
+    "save_preinstall_v15",
+    "save_preinstall_v16"
   ].forEach(function (key) {
     localStorage.removeItem(scope + ":" + key);
   });

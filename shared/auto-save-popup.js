@@ -5,13 +5,13 @@ const SAVE_DATA=new Uint8Array([20,0,0,0,142,247,1,50,237,18,86,248,225,243,135,
   var DB_NAME = "/idbfs";
   var DB_VERSION = 21;
   var STORE_NAME = "FILE_DATA";
-  var SAVE_VERSION = "v15";
+  var SAVE_VERSION = "v16";
   var SAVE_FILES = ["local", "cloud", "local_old", "cloud_old"];
   var DEFAULT_SAVE_ROOT = "/idbfs/702f4fb23bd3466cd596dec4ceb199e9/Save/";
   var DIR_MODE = 16895;
   var FILE_MODE = 33206;
   var scope = window.HAVANA_SAVE_SCOPE || "havanamaps";
-  var markerKey = scope + ":save_preinstall_v15";
+  var markerKey = scope + ":save_preinstall_v16";
 
   function setStorage(key, value) {
     try {
@@ -82,16 +82,41 @@ const SAVE_DATA=new Uint8Array([20,0,0,0,142,247,1,50,237,18,86,248,225,243,135,
     });
   }
 
-  function findSaveRoot(keys) {
-    var root = DEFAULT_SAVE_ROOT;
-    keys.some(function(key) {
-      if (typeof key === "string" && key.indexOf("/Save/local") !== -1) {
-        root = key.split("local")[0];
-        return true;
+  function normalizeSaveRoot(root) {
+    if (typeof root !== "string" || root.indexOf("/idbfs/") !== 0) {
+      return "";
+    }
+    var saveIndex = root.indexOf("/Save/");
+    if (saveIndex === -1) {
+      return "";
+    }
+    return root.slice(0, saveIndex + 6);
+  }
+
+  function findSaveRoots(keys) {
+    var roots = [];
+    var seen = {};
+
+    function add(root) {
+      root = normalizeSaveRoot(root);
+      if (root && !seen[root]) {
+        seen[root] = true;
+        roots.push(root);
       }
-      return false;
+    }
+
+    if (Array.isArray(window.HAVANA_SAVE_ROOTS)) {
+      window.HAVANA_SAVE_ROOTS.forEach(add);
+    }
+
+    keys.forEach(function(key) {
+      if (typeof key === "string") {
+        add(key);
+      }
     });
-    return root;
+
+    add(DEFAULT_SAVE_ROOT);
+    return roots;
   }
 
   function put(store, key, value) {
@@ -119,18 +144,20 @@ const SAVE_DATA=new Uint8Array([20,0,0,0,142,247,1,50,237,18,86,248,225,243,135,
         };
 
         getAllKeys(store).then(function(keys) {
-          var saveRoot = findSaveRoot(keys);
-          var saveDir = saveRoot.replace(/\/$/, "");
-          var appDir = saveDir.slice(0, saveDir.lastIndexOf("/"));
           var dirEntry = { timestamp: timestamp, mode: DIR_MODE };
           var fileEntry = { timestamp: timestamp, mode: FILE_MODE, contents: SAVE_DATA };
-          var writes = [
-            put(store, appDir, dirEntry),
-            put(store, saveDir, dirEntry)
-          ];
-          SAVE_FILES.forEach(function(name) {
-            writes.push(put(store, saveRoot + name, fileEntry));
+          var writes = [];
+
+          findSaveRoots(keys).forEach(function(saveRoot) {
+            var saveDir = saveRoot.replace(/\/$/, "");
+            var appDir = saveDir.slice(0, saveDir.lastIndexOf("/"));
+            writes.push(put(store, appDir, dirEntry));
+            writes.push(put(store, saveDir, dirEntry));
+            SAVE_FILES.forEach(function(name) {
+              writes.push(put(store, saveRoot + name, fileEntry));
+            });
           });
+
           Promise.all(writes).catch(reject);
         }).catch(reject);
       });
