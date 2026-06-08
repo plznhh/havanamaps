@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HavanaMaps - Map Selector</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="selector-shell">
+    <section class="selector-card" aria-labelledby="site-title">
+      <div class="site-tabs" aria-label="Mapas">
+        <button class="site-tab is-active" type="button">Havana</button>
+        <button class="site-tab" type="button" disabled>Mais mapas</button>
+      </div>
+
+      <div class="preview-card">
+        <div class="map-preview" aria-hidden="true">
+          <span class="open-badge">SAVE ON</span>
+          <span class="preview-title">HAVANA</span>
+        </div>
+
+        <div class="map-panel">
+          <div class="brand-block">
+            <p class="kicker">Subway Maps</p>
+            <h1 id="site-title">HavanaMaps</h1>
+            <p>Escolha uma das tres versoes Havana. Todas ja estao com save integrado.</p>
+          </div>
+
+          <form class="option-list" id="map-form">
+            <label class="map-option is-selected">
+              <input type="radio" name="map" value="maps/havana-original-updated/" checked>
+              <span class="radio-dot" aria-hidden="true"></span>
+              <span>
+                <strong>Havana Impo Reduced</strong>
+                <small>Havana original sem roll/jump coins</small>
+              </span>
+            </label>
+
+            <label class="map-option">
+              <input type="radio" name="map" value="maps/havana-reduced/">
+              <span class="radio-dot" aria-hidden="true"></span>
+              <span>
+                <strong>Havana 70%</strong>
+                <small>Havana reduced com geracao 70%</small>
+              </span>
+            </label>
+
+            <label class="map-option">
+              <input type="radio" name="map" value="maps/havana-updated/">
+              <span class="radio-dot" aria-hidden="true"></span>
+              <span>
+                <strong>Havana 70% + Impo Reduced</strong>
+                <small>70% e sem roll/jump coins</small>
+              </span>
+            </label>
+          </form>
+
+          <div class="selected-summary" id="selected-summary">
+            <span class="menu-icon" aria-hidden="true">☰</span>
+            <span>
+              <strong>Havana Impo Reduced</strong>
+              <small>Havana original sem roll/jump coins</small>
+            </span>
+            <span class="chevron" aria-hidden="true">⌃</span>
+          </div>
+
+          <a class="play-button" id="play-button" href="maps/havana-original-updated/">
+            <span aria-hidden="true">▶</span>
+            <strong>JOGAR</strong>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var form = document.getElementById("map-form");
+      var play = document.getElementById("play-button");
+      var summary = document.getElementById("selected-summary");
+      var options = Array.prototype.slice.call(document.querySelectorAll(".map-option"));
+
+      function sync() {
+        var selected = form.querySelector("input[name='map']:checked");
+        var label = selected.closest(".map-option");
+        options.forEach(function (option) {
+          option.classList.toggle("is-selected", option === label);
+        });
+        play.href = selected.value;
+        summary.querySelector("strong").textContent = label.querySelector("strong").textContent;
+        summary.querySelector("small").textContent = label.querySelector("small").textContent;
+      }
+
+      form.addEventListener("change", sync);
+      sync();
+    })();
+  </script>
+</body>
+</html>
