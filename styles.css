@@ -213,6 +213,10 @@ h1 {
   border-radius: 15px;
 }
 
+.option-list[hidden] {
+  display: none;
+}
+
 .map-option {
   min-height: 66px;
   display: grid;
@@ -271,6 +275,20 @@ h1 {
   gap: 12px;
   padding: 10px 14px;
   border-radius: 16px;
+  width: 100%;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  appearance: none;
+}
+
+.selected-summary:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 3px;
+}
+
+.selected-summary.is-open {
+  border-radius: 16px 16px 10px 10px;
 }
 
 .menu-icon {
@@ -285,7 +303,13 @@ h1 {
 
 .chevron {
   color: var(--muted);
-  font-size: 24px;
+  font-size: 18px;
+  text-align: center;
+  transition: transform .18s ease;
+}
+
+.selected-summary.is-open .chevron {
+  transform: rotate(180deg);
 }
 
 .play-button {

@@ -27,7 +27,7 @@
             <p>Escolha uma das tres versoes Havana. Todas ja estao com save integrado.</p>
           </div>
 
-          <form class="option-list" id="map-form">
+          <form class="option-list" id="map-form" hidden>
             <label class="map-option is-selected">
               <input type="radio" name="map" value="maps/havana-original-updated/" checked>
               <span class="radio-dot" aria-hidden="true"></span>
@@ -56,14 +56,14 @@
             </label>
           </form>
 
-          <div class="selected-summary" id="selected-summary">
+          <button class="selected-summary" id="selected-summary" type="button" aria-expanded="false" aria-controls="map-form">
             <span class="menu-icon" aria-hidden="true">☰</span>
             <span>
               <strong>Havana Impo Reduced</strong>
               <small>Havana original sem roll/jump coins</small>
             </span>
             <span class="chevron" aria-hidden="true">⌃</span>
-          </div>
+          </button>
 
           <a class="play-button" id="play-button" href="maps/havana-original-updated/">
             <span aria-hidden="true">▶</span>
@@ -81,7 +81,13 @@
       var summary = document.getElementById("selected-summary");
       var options = Array.prototype.slice.call(document.querySelectorAll(".map-option"));
 
-      function sync() {
+      function setOpen(isOpen) {
+        form.hidden = !isOpen;
+        summary.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        summary.classList.toggle("is-open", isOpen);
+      }
+
+      function sync(closePicker) {
         var selected = form.querySelector("input[name='map']:checked");
         var label = selected.closest(".map-option");
         options.forEach(function (option) {
@@ -90,10 +96,32 @@
         play.href = selected.value;
         summary.querySelector("strong").textContent = label.querySelector("strong").textContent;
         summary.querySelector("small").textContent = label.querySelector("small").textContent;
+        if (closePicker) {
+          setOpen(false);
+        }
       }
 
-      form.addEventListener("change", sync);
-      sync();
+      summary.addEventListener("click", function () {
+        setOpen(form.hidden);
+      });
+
+      form.addEventListener("change", function () {
+        sync(true);
+      });
+
+      document.addEventListener("click", function (event) {
+        if (!form.contains(event.target) && !summary.contains(event.target)) {
+          setOpen(false);
+        }
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          setOpen(false);
+        }
+      });
+
+      sync(false);
     })();
   </script>
 </body>
