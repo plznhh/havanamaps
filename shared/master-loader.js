@@ -14,7 +14,7 @@ if (document.currentScript && document.currentScript.src) {
 }
 var root = scriptUrl.split("master-loader.js")[0],
     loaders = {
-        unity: "unity.js",
+        unity: "unity.js?v=6",
         "unity-beta": "unity-beta.js",
         "unity-2020": "unity-2020.js"
     };

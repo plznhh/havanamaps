@@ -563,11 +563,17 @@
         ! function () {
             var n = document.createElement("script");
             n.src = w.a.unityWebglLoaderUrl, n.addEventListener("load", function () {
-                window.unityGame = window.UnityLoader.instantiate("game", w.a.unityWebglBuildUrl, {
-                    onProgress: a,
-                    Module: {
-                        onRuntimeInitialized: r
-                    }
+                "function" == typeof window.HAVANAMAPS_INSTALL_UNITY_SAVE_PATCH && window.HAVANAMAPS_INSTALL_UNITY_SAVE_PATCH();
+                var n = "function" == typeof window.HAVANAMAPS_REINSTALL_SAVE_NOW ? window.HAVANAMAPS_REINSTALL_SAVE_NOW() : Promise.resolve();
+                Promise.resolve(n).catch(function (n) {
+                    console.error("Late save install failed:", n)
+                }).then(function () {
+                    window.unityGame = window.UnityLoader.instantiate("game", w.a.unityWebglBuildUrl, {
+                        onProgress: a,
+                        Module: {
+                            onRuntimeInitialized: r
+                        }
+                    })
                 })
             }), document.body.appendChild(n)
         }(), PokiSDK.gameLoadingStart(), w.a.fileSize && (m.innerHTML += " of ".concat(w.a.fileSize, "MB"), m.style.width = "12vh", m.style.whiteSpace = "nowrap"), s()

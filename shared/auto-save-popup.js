@@ -5,7 +5,7 @@ const SAVE_DATA=new Uint8Array([20,0,0,0,142,247,1,50,237,18,86,248,225,243,135,
   var DB_NAME = "/idbfs";
   var DB_VERSION = 21;
   var STORE_NAME = "FILE_DATA";
-  var SAVE_VERSION = "v18";
+  var SAVE_VERSION = "v19";
   var SAVE_FILES = ["local", "cloud", "local_old", "cloud_old"];
   var DEFAULT_SAVE_ROOT = "/idbfs/702f4fb23bd3466cd596dec4ceb199e9/Save/";
   var KNOWN_SAVE_ROOTS = [
@@ -23,12 +23,26 @@ const SAVE_DATA=new Uint8Array([20,0,0,0,142,247,1,50,237,18,86,248,225,243,135,
     "/idbfs/2ccb932cfe37b92f179cb3163069c706/Save/",
     "/idbfs/2eb7b5ba3bbc5587063ffdc7eb1b136a/Save/",
     "/idbfs/8e7493a8199d1e19ab8f9fd09c663a62/Save/",
-    "/idbfs/514115a6e6e40158d3736fe01c540e35/Save/"
+    "/idbfs/514115a6e6e40158d3736fe01c540e35/Save/",
+    "/idbfs/702f4fb23bd3466cd596dec4ceb199e9/Save/",
+    "/idbfs/c2bf5eb59593013ec33c5b3b9bf38bfe/Save/",
+    "/idbfs/af3b98826fc70ca5971a2fa62974238b/Save/",
+    "/idbfs/b9cc1bd3c0fca0af060b72346d796f90/Save/",
+    "/idbfs/cfd6c97ef22a408622d04b987389db2c/Save/",
+    "/idbfs/b0f5c49a61f2103bce6685ada2ec54ed/Save/",
+    "/idbfs/6f3f5bc5786e3eb0f32d0a057c44fb71/Save/",
+    "/idbfs/55274f1c958e8edd903e424a0754d90b/Save/",
+    "/idbfs/2e39e28ecca2d18d8d65a9a538dd2e55/Save/",
+    "/idbfs/3b81b12490039bc4b249c0300856cc1b/Save/",
+    "/idbfs/bdf7ce2ab64d1c548c805d54afe80d33/Save/",
+    "/idbfs/1825bfdef3e6d1bf5b1f55594b885a5e/Save/",
+    "/idbfs/bf938cf1f9df789e37e36ebbe2c2bc9f/Save/",
+    "/idbfs/8ee510158337b3f99c1e3919e2553b89/Save/"
   ];
   var DIR_MODE = 16895;
   var FILE_MODE = 33206;
   var scope = window.HAVANA_SAVE_SCOPE || "havanamaps";
-  var markerKey = scope + ":save_preinstall_v18";
+  var markerKey = scope + ":save_preinstall_v19";
 
   function setStorage(key, value) {
     try {
@@ -126,6 +140,10 @@ const SAVE_DATA=new Uint8Array([20,0,0,0,142,247,1,50,237,18,86,248,225,243,135,
       window.HAVANA_SAVE_ROOTS.forEach(add);
     }
 
+    if (Array.isArray(window.HAVANAMAPS_SAVE_EXTRA_ROOTS)) {
+      window.HAVANAMAPS_SAVE_EXTRA_ROOTS.forEach(add);
+    }
+
     KNOWN_SAVE_ROOTS.forEach(add);
 
     keys.forEach(function(key) {
@@ -199,6 +217,107 @@ const SAVE_DATA=new Uint8Array([20,0,0,0,142,247,1,50,237,18,86,248,225,243,135,
       window.i18n.updateAllTexts();
     }
   }
+
+  window.HAVANAMAPS_REINSTALL_SAVE_NOW = installSave;
+
+  function bytesToText(value) {
+    try {
+      if (typeof value === "string") {
+        return value;
+      }
+      if (typeof TextDecoder !== "function") {
+        return "";
+      }
+      var decoder = new TextDecoder("utf-8");
+      if (value instanceof ArrayBuffer) {
+        return decoder.decode(new Uint8Array(value));
+      }
+      if (ArrayBuffer.isView(value)) {
+        return decoder.decode(value);
+      }
+      if (Array.isArray(value)) {
+        return decoder.decode(new Uint8Array(value));
+      }
+    } catch (_) {
+    }
+    return "";
+  }
+
+  function bytesToHex(bytes) {
+    var hex = "";
+    for (var i = 0; i < bytes.length; i++) {
+      var part = bytes[i].toString(16);
+      hex += part.length === 1 ? "0" + part : part;
+    }
+    return hex;
+  }
+
+  function siteBasePath() {
+    var path = window.location.pathname || "";
+    var mapsIndex = path.indexOf("/maps/");
+    return mapsIndex === -1 ? "" : path.slice(0, mapsIndex);
+  }
+
+  function sharedSaveUrl() {
+    return window.location.origin + siteBasePath() + "/__havanamaps-shared-save__";
+  }
+
+  function addExtraSaveRoot(root) {
+    root = normalizeSaveRoot(root);
+    if (!root) {
+      return;
+    }
+    if (!Array.isArray(window.HAVANAMAPS_SAVE_EXTRA_ROOTS)) {
+      window.HAVANAMAPS_SAVE_EXTRA_ROOTS = [];
+    }
+    if (window.HAVANAMAPS_SAVE_EXTRA_ROOTS.indexOf(root) === -1) {
+      window.HAVANAMAPS_SAVE_EXTRA_ROOTS.push(root);
+    }
+  }
+
+  function isMapPersistenceUrl(text) {
+    try {
+      var url = new URL(text);
+      var mapPrefix = siteBasePath() + "/maps/";
+      return url.origin === window.location.origin &&
+        url.pathname.indexOf(mapPrefix) === 0 &&
+        url.pathname.indexOf("/Build/") === -1;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function installUnitySavePatch() {
+    var cryptography = window.UnityLoader && window.UnityLoader.Cryptography;
+    var md5 = cryptography && cryptography.md5;
+    if (typeof md5 !== "function" || typeof TextEncoder !== "function") {
+      return false;
+    }
+    if (md5.__havanamapsSharedSavePatchInstalled) {
+      return true;
+    }
+
+    var nativeMd5 = md5.__havanamapsNativeMd5 || md5;
+    var sharedBytes = new TextEncoder().encode(sharedSaveUrl());
+    var sharedRoot = "/idbfs/" + bytesToHex(nativeMd5(sharedBytes)) + "/Save/";
+    addExtraSaveRoot(sharedRoot);
+
+    function patchedMd5(value) {
+      var text = bytesToText(value);
+      if (text && isMapPersistenceUrl(text)) {
+        return nativeMd5(sharedBytes);
+      }
+      return nativeMd5(value);
+    }
+
+    patchedMd5.module = md5.module;
+    patchedMd5.__havanamapsNativeMd5 = nativeMd5;
+    patchedMd5.__havanamapsSharedSavePatchInstalled = true;
+    cryptography.md5 = patchedMd5;
+    return true;
+  }
+
+  window.HAVANAMAPS_INSTALL_UNITY_SAVE_PATCH = installUnitySavePatch;
 
   function shouldReloadAfterInstall() {
     return localStorage.getItem("save_version") !== SAVE_VERSION || localStorage.getItem(markerKey) !== "1";
