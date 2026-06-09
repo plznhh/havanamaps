@@ -4,7 +4,7 @@
   "productVersion": "1.94.0",
   "dataUrl": "beijing-70.data.unityweb",
   "wasmCodeUrl": "../../../shared/Build/wasm_code_shared.unityweb",
-  "wasmFrameworkUrl": "../../../shared/4399-beijing.js?v=1",
+  "wasmFrameworkUrl": "../../../shared/Build/wasm_framework.unityweb?v=3",
   "TOTAL_MEMORY": 369098752,
   "graphicsAPI": [
     "WebGL 2.0",
