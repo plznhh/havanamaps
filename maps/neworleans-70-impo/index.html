@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New Orleans 70% + Impo Reduced</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <script>
+    window.i18n = {
+      messages: {
+        saveTitle: "Save New Orleans 70% + Impo Reduced",
+        saveDescription: "O save esta sendo instalado no navegador.",
+        saveFeatures1: "Progresso e itens do save carregados",
+        saveFeatures2: "Copias local e de seguranca configuradas",
+        saveWarning1: "O save foi aplicado.",
+        saveWarning2: "A pagina sera recarregada automaticamente.",
+        saveWarning3: "Nao feche esta pagina durante a instalacao."
+      },
+      t: function (key) { return this.messages[key] || key; },
+      updateAllTexts: function () {
+        document.querySelectorAll("[data-i18n]").forEach(function (element) {
+          element.textContent = window.i18n.t(element.dataset.i18n);
+        });
+      }
+    };
+  </script>
+  <script>
+    window.HAVANA_SAVE_SCOPE = "neworleans-70-impo";
+    window.HAVANA_SAVE_ROOTS = ["/idbfs/144a80431be3197ac986faded0fe22f6/Save/", "/idbfs/de1f069b7aef580e0e966f626b55ccf8/Save/", "/idbfs/b9169c31c0c3a8cdcdf67a128284a313/Save/", "/idbfs/702f4fb23bd3466cd596dec4ceb199e9/Save/"];
+  </script>
+  <script src="../../shared/startup-fixes.js?v=12"></script>
+  <script src="../../shared/save-scope.js?v=5"></script>
+  <script src="../../shared/auto-save-popup.js?v=16"></script>
+  <script src="../../shared/4399-2019.2.js?v=1"></script>
+  <script>
+    window.config = {
+      loader: "unity",
+      debug: false,
+      maxRatio: 16 / 9,
+      minRatio: 9 / 16,
+      title: "Subway Surfers: New Orleans 70% + Impo Reduced",
+      unityVersion: "2019.2.0f1",
+      unityWebglLoaderUrl: "../../shared/UnityLoader.2019.2.js?v=20260608-2",
+      unityWebglBuildUrl: "Build/neworleans-70-impo.json"
+    };
+  </script>
+</head>
+<body class="game-page">
+  <script src="../../shared/master-loader.js?v=5"></script>
+</body>
+</html>

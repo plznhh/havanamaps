@@ -3,130 +3,173 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HavanaMaps - Map Selector</title>
-  <link rel="stylesheet" href="styles.css?v=2">
+  <title>Subway Maps - Map Selector</title>
+  <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
-  <main class="selector-shell">
-    <section class="selector-card" aria-labelledby="site-title">
-      <div class="site-tabs" aria-label="Mapas">
-        <button class="site-tab is-active" id="maps-tab" type="button">Havana</button>
-        <button class="site-tab" id="settings-tab" type="button">Config</button>
-        <button class="site-tab" type="button" disabled>Mais mapas</button>
-      </div>
+  <header class="site-header">
+    <a class="site-brand" href="./" aria-label="Subway Maps">
+      <span class="brand-mark" aria-hidden="true">SM</span>
+      <span>
+        <strong>Subway Maps</strong>
+        <small>Custom map selector</small>
+      </span>
+    </a>
+    <button class="settings-button" id="settings-open" type="button" aria-haspopup="dialog">
+      <span aria-hidden="true">&#9881;</span>
+      Configuracoes
+    </button>
+  </header>
 
-      <div class="preview-card" id="maps-panel">
-        <div class="map-preview" aria-hidden="true">
-          <span class="open-badge">SAVE ON</span>
-          <span class="preview-title">HAVANA</span>
+  <main class="catalog-shell">
+    <section class="catalog-heading" aria-labelledby="site-title">
+      <p class="eyebrow">Map collection</p>
+      <h1 id="site-title">Escolha seu mapa</h1>
+      <p>Havana, New Orleans e Zurich com save integrado e tres tipos de geracao.</p>
+    </section>
+
+    <section class="map-grid" aria-label="Mapas disponiveis">
+      <article class="map-card">
+        <div class="map-art">
+          <img src="assets/maps/havana.jpg" alt="Mapa Havana">
+          <span class="map-badge">SAVE ON</span>
+          <span class="version-count">3X</span>
         </div>
-
-        <div class="map-panel">
-          <div class="brand-block">
-            <p class="kicker">Subway Maps</p>
-            <h1 id="site-title">HavanaMaps</h1>
-            <p>Escolha uma das tres versoes Havana. Todas ja estao com save integrado.</p>
+        <div class="map-card-body">
+          <div class="map-title-row">
+            <div>
+              <p class="country">CUBA</p>
+              <h2>Havana</h2>
+            </div>
+            <span class="map-number">01</span>
           </div>
-
-          <form class="option-list" id="map-form" hidden>
-            <label class="map-option is-selected">
-              <input type="radio" name="map" value="maps/havana-original-updated/" checked>
-              <span class="radio-dot" aria-hidden="true"></span>
-              <span>
-                <strong>Havana Impo Reduced</strong>
-                <small>Havana original sem roll/jump coins</small>
-              </span>
-            </label>
-
-            <label class="map-option">
-              <input type="radio" name="map" value="maps/havana-reduced/">
-              <span class="radio-dot" aria-hidden="true"></span>
-              <span>
-                <strong>Havana 70%</strong>
-                <small>Havana reduced com geracao 70%</small>
-              </span>
-            </label>
-
-            <label class="map-option">
-              <input type="radio" name="map" value="maps/havana-updated/">
-              <span class="radio-dot" aria-hidden="true"></span>
-              <span>
-                <strong>Havana 70% + Impo Reduced</strong>
-                <small>70% e sem roll/jump coins</small>
-              </span>
-            </label>
-          </form>
-
-          <button class="selected-summary" id="selected-summary" type="button" aria-expanded="false" aria-controls="map-form">
-            <span class="menu-icon" aria-hidden="true">☰</span>
-            <span>
-              <strong>Havana Impo Reduced</strong>
-              <small>Havana original sem roll/jump coins</small>
-            </span>
-            <span class="chevron" aria-hidden="true">⌃</span>
-          </button>
-
-          <a class="play-button" id="play-button" href="maps/havana-original-updated/">
-            <span aria-hidden="true">▶</span>
-            <strong>JOGAR</strong>
+          <p class="map-description">Ruas solares. Tres versoes modificadas do mapa.</p>
+          <label class="version-picker">
+            <span>TIPO DA VERSAO</span>
+            <select data-map-select>
+              <option value="maps/havana-original-updated/">Impo Reduced</option>
+              <option value="maps/havana-reduced/">70%</option>
+              <option value="maps/havana-updated/">70% + Impo Reduced</option>
+            </select>
+          </label>
+          <a class="play-button" data-play-button href="maps/havana-original-updated/">
+            <span aria-hidden="true">&#9655;</span>
+            JOGAR
           </a>
         </div>
-      </div>
+      </article>
 
-      <section class="settings-card" id="settings-panel" hidden>
-        <div class="settings-header">
-          <div>
-            <p class="kicker">Settings</p>
-            <h2>Configurações</h2>
-          </div>
-          <button class="settings-close" id="settings-close" type="button">Voltar</button>
+      <article class="map-card">
+        <div class="map-art">
+          <img src="assets/maps/neworleans.jpg" alt="Mapa New Orleans">
+          <span class="map-badge">SAVE ON</span>
+          <span class="version-count">3X</span>
         </div>
-
-        <div class="custom-resolution-box">
-          <label class="toggle-row">
-            <span>Custom Resolution</span>
-            <input id="custom-resolution-toggle" type="checkbox">
-            <span class="switch" aria-hidden="true"></span>
+        <div class="map-card-body">
+          <div class="map-title-row">
+            <div>
+              <p class="country">ESTADOS UNIDOS</p>
+              <h2>New Orleans</h2>
+            </div>
+            <span class="map-number">02</span>
+          </div>
+          <p class="map-description">Bairro frances. Tres versoes modificadas do mapa.</p>
+          <label class="version-picker">
+            <span>TIPO DA VERSAO</span>
+            <select data-map-select>
+              <option value="maps/neworleans-impo/">Impo Reduced</option>
+              <option value="maps/neworleans-70/">70%</option>
+              <option value="maps/neworleans-70-impo/">70% + Impo Reduced</option>
+            </select>
           </label>
-
-          <div class="resolution-fields">
-            <label>
-              <span>Width</span>
-              <input id="resolution-width" type="number" inputmode="numeric" min="1" max="9999" value="608">
-            </label>
-            <label>
-              <span>Height</span>
-              <input id="resolution-height" type="number" inputmode="numeric" min="1" max="9999" value="1080">
-            </label>
-          </div>
-
-          <button class="reset-resolution" id="reset-resolution" type="button">RESET</button>
-          <p class="fullscreen-note">Press F11 for full-screen.</p>
-
-          <div class="resolution-presets" aria-label="Resoluções prontas">
-            <button type="button" data-width="608" data-height="1080">608x1080</button>
-            <button type="button" data-width="800" data-height="600">800x600</button>
-            <button type="button" data-width="800" data-height="1080">800x1080</button>
-            <button type="button" data-width="720" data-height="1280">720x1280</button>
-            <button type="button" data-width="768" data-height="1024">768x1024</button>
-            <button type="button" data-width="820" data-height="1180">820x1180</button>
-            <button type="button" data-width="1024" data-height="1366">1024x1366</button>
-          </div>
+          <a class="play-button" data-play-button href="maps/neworleans-impo/">
+            <span aria-hidden="true">&#9655;</span>
+            JOGAR
+          </a>
         </div>
-      </section>
+      </article>
+
+      <article class="map-card">
+        <div class="map-art">
+          <img src="assets/maps/zurich.jpg" alt="Mapa Zurich">
+          <span class="map-badge">SAVE ON</span>
+          <span class="version-count">3X</span>
+        </div>
+        <div class="map-card-body">
+          <div class="map-title-row">
+            <div>
+              <p class="country">SUICA</p>
+              <h2>Zurich</h2>
+            </div>
+            <span class="map-number">03</span>
+          </div>
+          <p class="map-description">Alpes urbanos. Tres versoes modificadas do mapa.</p>
+          <label class="version-picker">
+            <span>TIPO DA VERSAO</span>
+            <select data-map-select>
+              <option value="maps/zurich-impo/">Impo Reduced</option>
+              <option value="maps/zurich-70/">70%</option>
+              <option value="maps/zurich-70-impo/">70% + Impo Reduced</option>
+            </select>
+          </label>
+          <a class="play-button" data-play-button href="maps/zurich-impo/">
+            <span aria-hidden="true">&#9655;</span>
+            JOGAR
+          </a>
+        </div>
+      </article>
     </section>
   </main>
 
+  <div class="settings-overlay" id="settings-overlay" hidden>
+    <section class="settings-card" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="settings-header">
+        <div>
+          <p class="eyebrow">Settings</p>
+          <h2 id="settings-title">Configuracoes</h2>
+        </div>
+        <button class="settings-close" id="settings-close" type="button" aria-label="Fechar configuracoes">&times;</button>
+      </div>
+
+      <div class="custom-resolution-box">
+        <label class="toggle-row">
+          <span>Custom Resolution</span>
+          <input id="custom-resolution-toggle" type="checkbox">
+          <span class="switch" aria-hidden="true"></span>
+        </label>
+
+        <div class="resolution-fields">
+          <label>
+            <span>Width</span>
+            <input id="resolution-width" type="number" inputmode="numeric" min="1" max="9999" value="608">
+          </label>
+          <label>
+            <span>Height</span>
+            <input id="resolution-height" type="number" inputmode="numeric" min="1" max="9999" value="1080">
+          </label>
+        </div>
+
+        <button class="reset-resolution" id="reset-resolution" type="button">RESET</button>
+        <p class="fullscreen-note">Press F11 for full-screen.</p>
+
+        <div class="resolution-presets" aria-label="Resolucoes prontas">
+          <button type="button" data-width="608" data-height="1080">608x1080</button>
+          <button type="button" data-width="800" data-height="600">800x600</button>
+          <button type="button" data-width="800" data-height="1080">800x1080</button>
+          <button type="button" data-width="720" data-height="1280">720x1280</button>
+          <button type="button" data-width="768" data-height="1024">768x1024</button>
+          <button type="button" data-width="820" data-height="1180">820x1180</button>
+          <button type="button" data-width="1024" data-height="1366">1024x1366</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
   <script>
     (function () {
-      var form = document.getElementById("map-form");
-      var play = document.getElementById("play-button");
-      var summary = document.getElementById("selected-summary");
-      var options = Array.prototype.slice.call(document.querySelectorAll(".map-option"));
-      var mapsTab = document.getElementById("maps-tab");
-      var settingsTab = document.getElementById("settings-tab");
-      var mapsPanel = document.getElementById("maps-panel");
-      var settingsPanel = document.getElementById("settings-panel");
+      var cards = Array.prototype.slice.call(document.querySelectorAll(".map-card"));
+      var settingsOverlay = document.getElementById("settings-overlay");
+      var settingsOpen = document.getElementById("settings-open");
       var settingsClose = document.getElementById("settings-close");
       var resolutionToggle = document.getElementById("custom-resolution-toggle");
       var resolutionWidth = document.getElementById("resolution-width");
@@ -139,42 +182,27 @@
         height: "havanamaps_custom_resolution_height"
       };
 
-      function setPanel(panel) {
-        var settingsOpen = panel === "settings";
-        mapsPanel.hidden = settingsOpen;
-        settingsPanel.hidden = !settingsOpen;
-        mapsTab.classList.toggle("is-active", !settingsOpen);
-        settingsTab.classList.toggle("is-active", settingsOpen);
-        if (settingsOpen) {
-          setOpen(false);
-        }
-      }
-
-      function setOpen(isOpen) {
-        form.hidden = !isOpen;
-        summary.setAttribute("aria-expanded", isOpen ? "true" : "false");
-        summary.classList.toggle("is-open", isOpen);
-      }
-
-      function sync(closePicker) {
-        var selected = form.querySelector("input[name='map']:checked");
-        var label = selected.closest(".map-option");
-        options.forEach(function (option) {
-          option.classList.toggle("is-selected", option === label);
+      cards.forEach(function (card) {
+        var select = card.querySelector("[data-map-select]");
+        var play = card.querySelector("[data-play-button]");
+        select.addEventListener("change", function () {
+          play.href = select.value;
         });
-        play.href = selected.value;
-        summary.querySelector("strong").textContent = label.querySelector("strong").textContent;
-        summary.querySelector("small").textContent = label.querySelector("small").textContent;
-        if (closePicker) {
-          setOpen(false);
+      });
+
+      function setSettings(open) {
+        settingsOverlay.hidden = !open;
+        document.body.classList.toggle("settings-open", open);
+        if (open) {
+          settingsClose.focus();
+        } else {
+          settingsOpen.focus();
         }
       }
 
       function clampResolution(value, fallback) {
         value = parseInt(value, 10);
-        if (!Number.isFinite(value) || value < 1) {
-          return fallback;
-        }
+        if (!Number.isFinite(value) || value < 1) return fallback;
         return Math.min(value, 9999);
       }
 
@@ -207,42 +235,18 @@
         updatePresetState();
       }
 
-      summary.addEventListener("click", function () {
-        setOpen(form.hidden);
+      settingsOpen.addEventListener("click", function () { setSettings(true); });
+      settingsClose.addEventListener("click", function () { setSettings(false); });
+      settingsOverlay.addEventListener("click", function (event) {
+        if (event.target === settingsOverlay) setSettings(false);
       });
-
-      form.addEventListener("change", function () {
-        sync(true);
-      });
-
-      document.addEventListener("click", function (event) {
-        if (!form.contains(event.target) && !summary.contains(event.target)) {
-          setOpen(false);
-        }
-      });
-
       document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-          setOpen(false);
-        }
-      });
-
-      mapsTab.addEventListener("click", function () {
-        setPanel("maps");
-      });
-
-      settingsTab.addEventListener("click", function () {
-        setPanel("settings");
-      });
-
-      settingsClose.addEventListener("click", function () {
-        setPanel("maps");
+        if (event.key === "Escape" && !settingsOverlay.hidden) setSettings(false);
       });
 
       resolutionToggle.addEventListener("change", saveResolution);
       resolutionWidth.addEventListener("change", saveResolution);
       resolutionHeight.addEventListener("change", saveResolution);
-
       presetButtons.forEach(function (button) {
         button.addEventListener("click", function () {
           resolutionWidth.value = button.dataset.width;
@@ -251,7 +255,6 @@
           saveResolution();
         });
       });
-
       resetResolution.addEventListener("click", function () {
         resolutionToggle.checked = false;
         resolutionWidth.value = 608;
@@ -260,7 +263,6 @@
       });
 
       loadResolution();
-      sync(false);
     })();
   </script>
 </body>
