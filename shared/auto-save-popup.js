@@ -5,7 +5,7 @@ const SAVE_DATA=new Uint8Array([20,0,0,0,142,247,1,50,237,18,86,248,225,243,135,
   var DB_NAME = "/idbfs";
   var DB_VERSION = 21;
   var STORE_NAME = "FILE_DATA";
-  var SAVE_VERSION = "v17";
+  var SAVE_VERSION = "v18";
   var SAVE_FILES = ["local", "cloud", "local_old", "cloud_old"];
   var DEFAULT_SAVE_ROOT = "/idbfs/702f4fb23bd3466cd596dec4ceb199e9/Save/";
   var KNOWN_SAVE_ROOTS = [
@@ -17,12 +17,18 @@ const SAVE_DATA=new Uint8Array([20,0,0,0,142,247,1,50,237,18,86,248,225,243,135,
     "/idbfs/c8f9228cf0c90ba322d0317f934e57cd/Save/",
     "/idbfs/66cd3a12d54943a4eba6d24944f56d85/Save/",
     "/idbfs/138ff2cd164383f49ff602d3dce06532/Save/",
-    "/idbfs/ec835e78cb6630d7e6848ea55029b539/Save/"
+    "/idbfs/ec835e78cb6630d7e6848ea55029b539/Save/",
+    "/idbfs/a2674a2d6d1a1db01113fb9ce0ce95eb/Save/",
+    "/idbfs/868769fe0668aef0a780d7c6ff0889bf/Save/",
+    "/idbfs/2ccb932cfe37b92f179cb3163069c706/Save/",
+    "/idbfs/2eb7b5ba3bbc5587063ffdc7eb1b136a/Save/",
+    "/idbfs/8e7493a8199d1e19ab8f9fd09c663a62/Save/",
+    "/idbfs/514115a6e6e40158d3736fe01c540e35/Save/"
   ];
   var DIR_MODE = 16895;
   var FILE_MODE = 33206;
   var scope = window.HAVANA_SAVE_SCOPE || "havanamaps";
-  var markerKey = scope + ":save_preinstall_v17";
+  var markerKey = scope + ":save_preinstall_v18";
 
   function setStorage(key, value) {
     try {
