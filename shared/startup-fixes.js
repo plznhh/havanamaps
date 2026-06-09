@@ -24,7 +24,8 @@
     "save_preinstall_v13",
     "save_preinstall_v14",
     "save_preinstall_v15",
-    "save_preinstall_v16"
+    "save_preinstall_v16",
+    "save_preinstall_v17"
   ].forEach(function (key) {
     localStorage.removeItem(scope + ":" + key);
   });
